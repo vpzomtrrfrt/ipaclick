@@ -8,7 +8,7 @@
 		"supervisor": "^0.12.0"
 	},
 	"scripts": {
-		"dev": "node-supervisor index.js",
-		"start": "node index.js"
+		"dev": "node-supervisor -e html server.js",
+		"start": "node server.js"
 	}
 }

@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json')));
+const indexHTML = fs.readFileSync(path.resolve(__dirname, 'index.html'));
 
 AWS.config.update({
 	accessKeyId: config.AWS_ACCESS_KEY,
@@ -17,7 +18,11 @@ const polly = new AWS.Polly();
 bluebird.promisifyAll(polly);
 
 http.createServer(function(req, res) {
-	if(req.url === "/") res.end("hi");
+	if(req.url === "/") {
+		res.writeHead(200, {"Content-type": "text/html", "Content-length": indexHTML.length});
+		res.write(indexHTML);
+		res.end();
+	}
 	else if(req.url.startsWith("/api/synthesize/")) {
 		const str = decodeURIComponent(req.url.substring(16));
 		console.log(str);
