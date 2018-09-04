@@ -15,7 +15,7 @@ AWS.config.update({
 });
 
 const polly = new AWS.Polly();
-bluebird.promisifyAll(polly);
+const synthesizeSpeech = bluebird.promisify(polly.synthesizeSpeech.bind(polly));
 
 http.createServer(function(req, res) {
 	if(req.url === "/") {
@@ -26,7 +26,7 @@ http.createServer(function(req, res) {
 	else if(req.url.startsWith("/api/synthesize/")) {
 		const str = decodeURIComponent(req.url.substring(16));
 		console.log(str);
-		polly.synthesizeSpeechAsync({
+		synthesizeSpeech({
 			Text: '<phoneme alphabet="ipa" ph="'+he.encode(str)+'"></phoneme>',
 			OutputFormat: "mp3",
 			TextType: "ssml",
